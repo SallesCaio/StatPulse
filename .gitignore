@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Env e dados locais
+.env
+data/
+
+# IDE
+.idea/
+.vscode/
