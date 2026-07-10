@@ -8,6 +8,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
+from datetime import datetime
+
 from app.models.enums import EventType, MatchStatus, Sport
 
 
@@ -22,7 +24,7 @@ class ProviderMatch:
     away_team_name: str
     competition_external_id: str | None = None
     competition_name: str | None = None
-    start_time: str | None = None
+    start_time: datetime | None = None
 
 
 @dataclass

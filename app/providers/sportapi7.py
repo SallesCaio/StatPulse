@@ -52,10 +52,10 @@ def _normalize_status(status: dict | None) -> MatchStatus:
     return _STATUS_MAP.get((status.get("type") or "").lower(), MatchStatus.SCHEDULED)
 
 
-def _to_iso(ts: int | None) -> str | None:
+def _to_iso(ts: int | None) -> datetime | None:
     if not ts:
         return None
-    return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
+    return datetime.fromtimestamp(ts, tz=timezone.utc)
 
 
 def _parse_matches(payload: dict[str, Any]) -> list[ProviderMatch]:

@@ -33,19 +33,16 @@ def build_application() -> Application:
     return app
 
 
-async def run_bot() -> None:
-    app = build_application()
-    logger.info("Bot StatPulse iniciado (polling)")
-    await app.run_polling()
-
-
 def main() -> None:
     from app.core.logging import configure_logging
 
     configure_logging()
     try:
-        asyncio.run(run_bot())
-    except RuntimeError as exc:
+        # ptb v22: run_polling() é síncrono e gerencia o event loop internamente.
+        app = build_application()
+        logger.info("Bot StatPulse iniciado (polling)")
+        app.run_polling()
+    except Exception as exc:  # noqa: BLE001
         logging.getLogger(__name__).error("Falha ao iniciar bot: %s", exc)
         raise SystemExit(1) from exc
 
