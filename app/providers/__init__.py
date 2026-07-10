@@ -11,4 +11,8 @@ def get_provider() -> SportsProvider | None:
     settings = get_settings()
     if not settings.api_football_key:
         return None
+    if (settings.provider or "api_football") == "sportapi7":
+        from app.providers.sportapi7 import SportApi7Provider
+
+        return SportApi7Provider(api_key=settings.api_football_key)
     return ApiFootballProvider(api_key=settings.api_football_key)

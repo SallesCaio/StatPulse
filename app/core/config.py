@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./data/statpulse.db"
     telegram_bot_token: str = ""
     api_football_key: str = ""
+    provider: str = "api_football"  # api_football | sportapi7
     poll_interval_seconds: int = 60
 
 
