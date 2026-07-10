@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 from app.engines.event.classifier import classify
-from app.models.enums import EventPriority, EventType
-from app.providers.api_football import _map_event_type, _parse_events, _parse_matches
+from app.models.enums import EventPriority, EventType, MatchStatus
+from app.providers.api_football import _map_event_type, _normalize_status, _parse_events, _parse_matches
 
 
 def test_map_event_type() -> None:
@@ -69,3 +69,12 @@ def test_classify() -> None:
     assert classify(EventType.SUBSTITUTION) == EventPriority.P2
     assert classify(EventType.PASS) == EventPriority.P3
     assert classify(EventType.SHOT) == EventPriority.P3
+
+
+def test_normalize_status() -> None:
+    assert _normalize_status("1H") == MatchStatus.LIVE
+    assert _normalize_status("HT") == MatchStatus.LIVE
+    assert _normalize_status("2H") == MatchStatus.LIVE
+    assert _normalize_status("FT") == MatchStatus.FINISHED
+    assert _normalize_status("NS") == MatchStatus.SCHEDULED
+    assert _normalize_status(None) == MatchStatus.SCHEDULED

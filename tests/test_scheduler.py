@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
 from app.core.database import Base
-from app.models.enums import EventPriority, EventType, Sport
+from app.models.enums import EventPriority, EventType, MatchStatus, Sport
 from app.models.event import Event
 from app.models.match import Match
 from app.providers.base import ProviderEvent, ProviderMatch, SportsProvider
@@ -36,7 +36,7 @@ def test_collect_ingests_and_is_idempotent() -> None:
     m = ProviderMatch(
         external_id="1",
         sport=Sport.FOOTBALL,
-        status="live",
+        status=MatchStatus.LIVE,
         home_team_external_id="10",
         home_team_name="A",
         away_team_external_id="20",

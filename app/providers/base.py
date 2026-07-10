@@ -8,14 +8,14 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from app.models.enums import EventType, Sport
+from app.models.enums import EventType, MatchStatus, Sport
 
 
 @dataclass
 class ProviderMatch:
     external_id: str
     sport: Sport
-    status: str  # live | scheduled | finished
+    status: MatchStatus
     home_team_external_id: str | None
     home_team_name: str
     away_team_external_id: str | None

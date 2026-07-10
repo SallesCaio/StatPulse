@@ -7,13 +7,35 @@ from typing import Any
 import httpx
 
 from app.core.logging import get_logger
-from app.models.enums import EventType, Sport
+from app.models.enums import EventType, MatchStatus, Sport
 from app.providers.base import ProviderEvent, ProviderMatch, SportsProvider
 
 logger = get_logger(__name__)
 
 BASE_URL = "https://api-football-v1.p.rapidapi.com/v3"
 HEADERS_HOST = "api-football-v1.p.rapidapi.com"
+
+_STATUS_MAP = {
+    "ns": MatchStatus.SCHEDULED,
+    "tbd": MatchStatus.SCHEDULED,
+    "1h": MatchStatus.LIVE,
+    "ht": MatchStatus.LIVE,
+    "2h": MatchStatus.LIVE,
+    "et": MatchStatus.LIVE,
+    "p": MatchStatus.LIVE,
+    "live": MatchStatus.LIVE,
+    "ft": MatchStatus.FINISHED,
+    "awd": MatchStatus.FINISHED,
+    "pen": MatchStatus.FINISHED,
+    "susp": MatchStatus.FINISHED,
+    "int": MatchStatus.FINISHED,
+}
+
+
+def _normalize_status(short: str | None) -> MatchStatus:
+    if not short:
+        return MatchStatus.SCHEDULED
+    return _STATUS_MAP.get(short.lower(), MatchStatus.SCHEDULED)
 
 
 def _map_event_type(api_type: str, detail: str | None) -> EventType:
@@ -43,7 +65,7 @@ def _parse_matches(payload: dict[str, Any]) -> list[ProviderMatch]:
             ProviderMatch(
                 external_id=str(fix.get("id")),
                 sport=Sport.FOOTBALL,
-                status=(fix.get("status") or {}).get("short", "live"),
+                status=_normalize_status((fix.get("status") or {}).get("short")),
                 home_team_external_id=str(home.get("id")) if home.get("id") else None,
                 home_team_name=home.get("name", "?"),
                 away_team_external_id=str(away.get("id")) if away.get("id") else None,
